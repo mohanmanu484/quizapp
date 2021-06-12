@@ -30,7 +30,6 @@ data class LogoUiModel(var name: String, var imgUrl: String, val qNumber: Int) :
     private var inputCount = 0
 
     fun getScrambledChars(): List<Char> {
-        Log.d("model","scrambled word is "+scrambledWord)
         scrambledWord = name.scrambleWord()
         return scrambledWord.toList()
     }
