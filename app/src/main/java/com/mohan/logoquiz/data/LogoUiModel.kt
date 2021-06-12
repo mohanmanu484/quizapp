@@ -4,20 +4,30 @@ import android.util.Log
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.databinding.ObservableField
+import com.mohan.logoquiz.BR
 import java.util.*
 
-data class LogoUiModel(var name: String, var imgUrl: String, val qNumber: Int) : BaseObservable() {
+data class LogoUiModel(var name: String, var imgUrl: String, val qNumber: Int) :BaseObservable() {
+
+
+
+    @Bindable
+    var ansString :String =""
+        set(value){
+            field = value
+            notifyPropertyChanged(BR.ansString)
+        }
+
 
     private val scrambledList = mutableMapOf<Char, Boolean>()
-
-    @get:Bindable
-    var ansString: ObservableField<String> = ObservableField<String>("")
 
     private var score = 0
 
     private var answered = false
 
     private var scrambledWord = ""
+
+    private var inputCount = 0
 
     fun getScrambledChars(): List<Char> {
         Log.d("model","scrambled word is "+scrambledWord)
@@ -26,10 +36,16 @@ data class LogoUiModel(var name: String, var imgUrl: String, val qNumber: Int) :
     }
 
     fun updateAns(char: String) {
-        if (!answered) {
-            ansString.set(ansString.get() + char)
+        if (!answered && inputCount<name.length) {
+            ansString = (ansString.orEmpty() + char)
+            inputCount+=1
         }
-        answered = name == ansString.get()
+        answered = name == ansString
+    }
+
+    fun reset(){
+        inputCount = 0
+        ansString = ""
     }
 
     fun isAnsered(): Boolean {
